@@ -1,0 +1,64 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String 
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  conversations Conversation[]
+}
+
+model Otp {
+  id        String   @id @default(uuid())
+  email     String
+  code      String
+  type      OtpType
+  expiresAt DateTime
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([email, type, used])
+}
+
+enum OtpType {
+  SIGNUP
+  FORGOT_PASSWORD
+}
+
+model Conversation {
+  id    String  @id @default(uuid())
+  title String?
+  summary String? @db.Text
+  userId String? 
+  user   User?   @relation(fields: [userId], references: [id])
+  messages Message[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Message {
+  id      String      @id @default(uuid())
+  role    MessageRole
+  content String      @db.Text
+  tokenCount Int?
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+enum MessageRole {
+  USER
+  ASSISTANT
+  SYSTEM
+}
