@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import Button from '../components/ui/Button';
-import { MessageSquare, Bot, Database, Lock, Clock, ShieldCheck, Zap, Sparkles } from 'lucide-react';
+import { Bot, Database, Lock, Clock, ShieldCheck, Zap } from 'lucide-react';
 import Logo from '../components/ui/Logo';
 
 export default function LandingPage() {
